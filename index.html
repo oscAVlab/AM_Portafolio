@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>xuzu — Alejandro Mendoza</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:#0E0D11;color:#F0EDF8;font-family:"DM Sans",sans-serif}
+.slider{display:flex;height:100vh;transition:transform .75s cubic-bezier(.77,0,.18,1)}
+.slide{min-width:100vw;height:100vh;overflow:hidden;position:relative;padding:64px 72px 48px;display:grid;place-content:center}
+.wave{position:absolute;top:0;right:0;width:52%;height:100%;pointer-events:none;opacity:.18;z-index:0}
+.inner{position:relative;z-index:1;width:100%;max-width:960px}
+.ui-lang{position:fixed;top:18px;right:64px;z-index:999;display:flex;border:.5px solid rgba(139,122,190,.3);border-radius:2px;overflow:hidden}
+.lb{font-size:9px;font-weight:500;letter-spacing:.15em;padding:6px 11px;background:none;border:none;cursor:pointer;color:#7A7585;font-family:"DM Sans",sans-serif}
+.lb.on{background:rgba(139,122,190,.1);color:#8B7ABE}
+.ui-ctr{position:fixed;top:20px;left:72px;z-index:999;font-size:10px;color:#7A7585;letter-spacing:.1em}
+.ui-dots{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:999;display:flex;gap:8px}
+.dot{width:5px;height:5px;border-radius:50%;background:#7A7585;border:none;cursor:pointer;padding:0;transition:background .3s,transform .3s}
+.dot.on{background:#8B7ABE;transform:scale(1.5)}
+/* type */
+.wm{font-size:clamp(36px,4.5vw,58px);font-weight:300;letter-spacing:.02em;line-height:1.05;margin-bottom:6px;font-family:"Cormorant Garamond",serif}
+.wm .z{color:#8B7ABE}
+.fn{font-size:11px;font-weight:300;letter-spacing:.18em;color:#7A7585;margin-bottom:32px}
+.sh{font-size:clamp(26px,3.4vw,44px);font-weight:300;letter-spacing:-.01em;line-height:1.05;margin-bottom:14px;color:#F5F3FA;font-family:"Cormorant Garamond",serif}
+.lbl{font-size:9px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:#8B7ABE;margin-bottom:8px}
+.sub{font-family:"Cormorant Garamond",serif;font-size:15px;line-height:1.7;color:#C0BBCC;margin-bottom:12px}
+.rule{width:32px;height:1px;background:#8B7ABE;opacity:.5;margin:14px 0}
+.roles{display:flex;flex-direction:column;gap:6px;margin-bottom:28px}
+.role{font-size:11px;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:#C0BBCC}
+/* layout */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:44px}
+.g2w{display:grid;grid-template-columns:1.25fr .75fr;gap:44px}
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.cap-card{border:.5px solid rgba(139,122,190,.22);padding:14px 16px;background:rgba(139,122,190,.1)}
+.cap-txt{font-family:"Cormorant Garamond",serif;font-size:15px;color:#C0BBCC;line-height:1.5}
+.cap-txt strong{color:#A99DD4;font-style:normal;font-weight:400}
+/* lists */
+.bl{display:flex;flex-direction:column}
+.bi{padding:8px 0;border-bottom:.5px solid rgba(139,122,190,.1);font-size:12px;color:#C0BBCC;display:flex;gap:10px;line-height:1.5}
+.bi::before{content:"+";color:#8B7ABE;flex-shrink:0;font-weight:500}
+.bi strong{color:#F0EDF8;font-weight:500}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border:.5px solid rgba(139,122,190,.22);color:#8B7ABE}
+/* hbar */
+.hbar{background:rgba(139,122,190,.1);border:.5px solid rgba(139,122,190,.22);border-left:2px solid #8B7ABE;padding:11px 14px;margin:10px 0}
+.hbar p{font-family:"Cormorant Garamond",serif;font-size:14px;color:#C0BBCC;font-style:italic;line-height:1.6}
+.hbar p strong{font-style:normal;color:#F0EDF8;font-weight:400}
+/* awards */
+.awl{display:flex;flex-direction:column}
+.awi{padding:8px 0;border-bottom:.5px solid rgba(139,122,190,.1);display:grid;grid-template-columns:58px 1fr;gap:12px}
+.awy{font-size:10px;font-weight:500;color:#8B7ABE;padding-top:2px}
+.awt{font-size:12px;color:#F0EDF8;margin-bottom:2px}
+.awd{font-size:11px;color:#7A7585;line-height:1.4}
+.awi.feat .awt{color:#A99DD4}
+/* festivals */
+.fw{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.fl{font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#8B7ABE;margin-bottom:8px;padding-bottom:6px;border-bottom:.5px solid rgba(139,122,190,.22)}
+.fr{display:flex;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:.5px solid rgba(139,122,190,.1);font-size:11px}
+.fr span:first-child{color:#F0EDF8}
+.fr span:last-child{color:#7A7585;flex-shrink:0}
+/* press */
+.press-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.press-card{border:.5px solid rgba(139,122,190,.22);padding:13px 15px;background:rgba(139,122,190,.1);text-decoration:none;display:block}
+.press-card:hover{border-color:#8B7ABE}
+.press-src{font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#8B7ABE;margin-bottom:4px}
+.press-ttl{font-family:"Cormorant Garamond",serif;font-size:13px;color:#C0BBCC;line-height:1.4}
+/* media — NO iframes, links instead */
+.media-lbl{font-size:9px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:#7A7585;margin-top:14px;margin-bottom:6px}
+.media-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;border:.5px solid rgba(139,122,190,.22);padding:8px 14px;font-size:11px;color:#A99DD4;margin-top:6px;transition:border-color .2s}
+.media-link:hover{border-color:#8B7ABE;color:#F0EDF8}
+.media-link::before{content:"▶";font-size:9px;color:#8B7ABE}
+/* contact */
+.clinks{display:flex;flex-direction:column}
+.clink{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:.5px solid rgba(139,122,190,.1);text-decoration:none;color:#F0EDF8;font-size:12px;transition:color .2s}
+.clink:hover{color:#8B7ABE}
+.clbl{font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#8B7ABE}
+.cbox{border:.5px solid rgba(139,122,190,.22);padding:20px;background:rgba(139,122,190,.1)}
+.city{font-family:"Cormorant Garamond",serif;font-size:28px;color:#F0EDF8;line-height:1;margin-bottom:3px}
+.ctry{font-size:12px;color:#7A7585;margin-bottom:14px}
+.adot{display:inline-block;width:6px;height:6px;background:#5CB87A;border-radius:50%;margin-right:8px}
+.sp-row{display:flex;gap:14px;align-items:center}
+.sp-lbl{font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:#7A7585}
+.sp-badge{font-size:11px;font-weight:500;color:#A99DD4}
+
+.yt{position:relative;padding-top:56.25%;margin-top:6px}
+.yt iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+.sp iframe{width:100%;height:136px;border:none;display:block;margin-top:6px}
+
+.arr{position:fixed;top:50%;transform:translateY(-50%);z-index:999;background:none;border:.5px solid rgba(139,122,190,.3);color:#7A7585;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s,background .2s;border-radius:1px}
+.arr:hover{border-color:#8B7ABE;color:#F0EDF8;background:rgba(139,122,190,.1)}
+.arr svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.arr.prev{left:16px}
+.arr.next{right:16px}
+/* lang */
+[data-en]{display:none}
+.en [data-es]{display:none}
+.en [data-en]{display:block}
+.en span[data-en]{display:inline}
+.en span[data-es]{display:none}
+@media(max-width:768px){
+  .slide{padding:56px 24px 40px}
+  .ui-lang{right:24px}.ui-ctr{left:24px}
+  .g2,.g2w,.cap-grid,.fw,.press-grid{grid-template-columns:1fr}
+  .wave{width:80%;opacity:.08}
+}
+</style>
+</head>
+<body>
+
+<div class="ui-lang">
+  <button class="lb on" id="bes" onclick="setLang('es')">ES</button>
+  <button class="lb" id="ben" onclick="setLang('en')">EN</button>
+</div>
+<div class="ui-ctr" id="uctr">1 / 10</div>
+<button class="arr prev" onclick="goTo(cur-1)" aria-label="Anterior"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+<button class="arr next" onclick="goTo(cur+1)" aria-label="Siguiente"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+<div class="ui-dots" id="udots"></div>
+
+<div class="slider" id="slider">
+
+<!-- 1 PORTADA -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="wg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8B7ABE"/><stop offset="100%" stop-color="#2A1F5C"/></linearGradient></defs>
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="url(#wg)" opacity=".55"/>
+    <path d="M240,0 Q400,120 300,310 Q200,490 360,680 L500,680 L500,0 Z" stroke="#8B7ABE" stroke-width=".5" fill="none" opacity=".4"/>
+  </svg>
+  <div class="inner">
+    <div class="wm" style="display:flex;justify-content:space-between;align-items:baseline;width:100%"><span style="color:#A99DD4">Alejandro</span><span style="color:#C0BBCC">Mendoza</span></div>
+    <div class="roles">
+      <span class="role" data-es>Ingeniero en Sonido</span>
+      <span class="role" data-en>Sound Engineer</span>
+      <span class="role" data-es>Producción Musical &amp; Diseño Sonoro</span>
+      <span class="role" data-en>Music Production &amp; Sound Design</span>
+    </div>
+    <div class="rule"></div>
+    <div class="sp-row">
+      <div class="sp-lbl">Sponsored by</div>
+      <div class="sp-badge">Universal Audio · UADx</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2 CAPACIDADES -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="#8B7ABE" opacity=".06"/>
+  </svg>
+  <div class="inner">
+    <div class="lbl" data-es>Capacidades</div><div class="lbl" data-en>Capabilities</div>
+    <div class="sh" data-es>Capacidades.</div><div class="sh" data-en>Capabilities.</div>
+    <div class="cap-grid">
+      <div class="cap-card"><div class="cap-txt" data-es><strong>Visión técnica y artística</strong><br>Comprensión integral del proceso sonoro.</div><div class="cap-txt" data-en><strong>Technical &amp; artistic vision</strong><br>Full understanding of the sonic process.</div></div>
+      <div class="cap-card"><div class="cap-txt" data-es><strong>Comprensión integral del sonido</strong><br>Del diseño sonoro al show en vivo.</div><div class="cap-txt" data-en><strong>Holistic sound understanding</strong><br>From sound design to the live show.</div></div>
+      <div class="cap-card"><div class="cap-txt" data-es><strong>Acompañamiento creativo</strong><br>Parte del proceso artístico, no solo técnico.</div><div class="cap-txt" data-en><strong>Creative partnership</strong><br>Part of the artistic process, not just technical.</div></div>
+      <div class="cap-card"><div class="cap-txt" data-es><strong>Fusión tradición y tecnología</strong><br>Puente entre lo orgánico y lo electrónico.</div><div class="cap-txt" data-en><strong>Tradition meets technology</strong><br>Bridge between the organic and the electronic.</div></div>
+      <div class="cap-card"><div class="cap-txt" data-es><strong>Manejo avanzado de tecnologías</strong><br>MIDI, OSC, Reaktor, Ableton Live, M4L.</div><div class="cap-txt" data-en><strong>Advanced tech fluency</strong><br>MIDI, OSC, Reaktor, Ableton Live, M4L.</div></div>
+      <div class="cap-card"><div class="cap-txt" data-es><strong>Perfil multidisciplinar</strong><br>Estudio, escena, composición, dirección, visuales.</div><div class="cap-txt" data-en><strong>Multidisciplinary profile</strong><br>Studio, stage, composition, direction, visuals.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3 SOBRE MÍ -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="#8B7ABE" opacity=".06"/>
+  </svg>
+  <div class="inner">
+    <div class="g2w">
+      <div>
+        <div class="lbl" data-es>Sobre mí</div><div class="lbl" data-en>About</div>
+        <div class="sh" data-es>Músico. Ingeniero. Productor.</div><div class="sh" data-en>Musician. Engineer. Producer.</div>
+        <div class="sub" data-es>Combina el perfil de músico con la ingeniería de sonido para abordar integralmente las necesidades sonoras de los proyectos musicales. Esto abarca sonido en directo y en estudio, diseño sonoro, producción musical, composición y arreglos, creación y diseño de secuencias para shows, dirección musical y performance en vivo.</div>
+        <div class="sub" data-en>Combines a musician's background with sound engineering to address the full sonic needs of musical projects — live and studio sound, sound design, production, composition, arrangement, show sequencing, musical direction, and live performance.</div>
+        <div class="sub" data-es>Ha formado parte de proyectos del medio musical ecuatoriano obteniendo reconocimientos de Ibermúsicas, SAYCE y el Ministerio de Cultura.</div>
+        <div class="sub" data-en>Part of Ecuador's music scene, earning recognition from Ibermúsicas, SAYCE, and Ecuador's Ministry of Culture.</div>
+        <div class="hbar">
+          <p data-es>'Memoria' fue usada en una escena de <strong>Parthenope</strong>, la nueva película de <strong>Paolo Sorrentino</strong> (2024)</p>
+          <p data-en>'Memoria' was featured in a scene of <strong>Parthenope</strong>, the new film by <strong>Paolo Sorrentino</strong> (2024)</p>
+        </div>
+      </div>
+      <div>
+        <div class="lbl" data-es>Exploración musical</div><div class="lbl" data-en>Musical exploration</div>
+        <div class="bl">
+          <div class="bi"><span data-es><strong>LaTorre</strong> — música tradicional ecuatoriana con producción contemporánea y tecnología escénica</span><span data-en><strong>LaTorre</strong> — traditional Ecuadorian music with contemporary production and live technology</span></div>
+          <div class="bi"><span data-es><strong>EVHA</strong> — electrónica experimental desde la identidad andina y amazónica</span><span data-en><strong>EVHA</strong> — experimental electronics built from Andean and Amazonian identity</span></div>
+          <div class="bi"><span data-es>Sistema en vivo de EVHA con <strong>Reaktor</strong> fue auspiciado y destacado por <strong>Native Instruments</strong></span><span data-en>EVHA's live <strong>Reaktor</strong> system was sponsored and featured by <strong>Native Instruments</strong></span></div>
+          <div class="bi"><span data-es>Bajo el alias <strong>xuzu</strong> explora producción electrónica e instrumental de forma personal</span><span data-en>Under the alias <strong>xuzu</strong> he explores electronic and instrumental production on a personal level</span></div>
+        </div>
+        <div class="rule"></div>
+        <div class="lbl">Sponsor</div>
+        <div class="bl"><div class="bi"><span><strong>Universal Audio</strong> — UADx Software Sponsor</span></div></div>
+        <div class="rule"></div>
+        <div class="media-lbl" data-es>LaTorre — Resurrección ft. Las Añez</div>
+        <div class="media-lbl" data-en>LaTorre — Resurrección ft. Las Añez</div>
+        <div class="yt" data-iframe><iframe src="https://www.youtube.com/embed/poPANMsJdDE" allowfullscreen loading="lazy"></iframe></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4 PRODUCCIÓN MUSICAL -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="#8B7ABE" opacity=".06"/>
+  </svg>
+  <div class="inner">
+    <div class="lbl" data-es>Producción Musical &amp; Diseño Sonoro</div><div class="lbl" data-en>Music Production &amp; Sound Design</div>
+    <div class="sh" data-es>Creación de mundos sonoros.</div><div class="sh" data-en>Creating sonic worlds.</div>
+    <div class="g2">
+      <div>
+        <div class="sub" data-es>Creación de mundos sonoros con identidad propia, diseñados para potenciar la expresión única de cada artista. En la mayoría de los proyectos, prácticamente todo lo que suena sale de las mismas manos.</div>
+        <div class="sub" data-en>Creating sonic worlds with their own identity. In most projects, nearly everything you hear comes from the same pair of hands — from concept to master.</div>
+        <div class="tags"><span class="tag">LaTorre</span><span class="tag">EVHA</span><span class="tag">Fiebre</span><span class="tag">AUA</span><span class="tag">Machaka</span></div>
+        <div class="media-lbl" data-es>Playlist de producción</div>
+        <div class="media-lbl" data-en>Production playlist</div>
+        <div class="sp" data-iframe><iframe src="https://open.spotify.com/embed/playlist/75xEVaCoisT3mm4tTZ5twy?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
+      </div>
+      <div>
+        <div class="lbl" data-es>Herramientas</div><div class="lbl" data-en>Tools</div>
+        <div class="bl">
+          <div class="bi"><span>Ableton Live · Logic Pro</span></div>
+          <div class="bi"><span data-es><strong>Reaktor</strong> — diseño de instrumentos y síntesis</span><span data-en><strong>Reaktor</strong> — instrument design and synthesis</span></div>
+          <div class="bi"><span data-es><strong>UADx</strong> — artista auspiciado por Universal Audio</span><span data-en><strong>UADx</strong> — Universal Audio sponsored artist</span></div>
+          <div class="bi"><span data-es>Síntesis · Diseño sonoro</span><span data-en>Synthesis · Sound design</span></div>
+          <div class="bi"><span data-es>Mezcla · Mastering</span><span data-en>Mixing · Mastering</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5 INGENIERÍA EN SONIDO -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="#8B7ABE" opacity=".06"/>
+  </svg>
+  <div class="inner">
+    <div class="lbl" data-es>Ingeniería en Sonido</div><div class="lbl" data-en>Sound Engineering</div>
+    <div class="sh" data-es>Enfoque integral.</div><div class="sh" data-en>Integral approach.</div>
+    <div class="g2">
+      <div>
+        <div class="sub" data-es>Un enfoque integral que abarca diversas áreas, brindando acompañamiento completo a los proyectos con los que trabaja.</div>
+        <div class="sub" data-en>A comprehensive approach spanning multiple disciplines, providing full support to every project.</div>
+        <div class="bl">
+          <div class="bi" data-es><span><strong>Sonido en directo</strong> — FOH, monitoreo y sistemas. Distintos formatos, géneros y espacios.</span></div>
+          <div class="bi" data-en><span><strong>Live sound</strong> — FOH, monitoring and systems. Various formats, genres and venues.</span></div>
+          <div class="bi" data-es><span><strong>Mezcla y Mastering</strong> — proyectos de estudio</span></div>
+          <div class="bi" data-en><span><strong>Mix and Mastering</strong> — studio projects</span></div>
+          <div class="bi" data-es><span><strong>Playback &amp; Backline</strong> — operación y diseño de racks para touring</span></div>
+          <div class="bi" data-en><span><strong>Playback &amp; Backline</strong> — operation and rack design for touring</span></div>
+          <div class="bi" data-es><span><strong>Ingeniería de grabación</strong> — sesiones de estudio y en vivo</span></div>
+          <div class="bi" data-en><span><strong>Recording engineering</strong> — studio and live sessions</span></div>
+        </div>
+        <div class="lbl" style="margin-top:14px" data-es>Proyectos recientes</div>
+        <div class="lbl" style="margin-top:14px" data-en>Recent projects</div>
+        <div class="tags"><span class="tag">Machaka</span><span class="tag">Guardarraya</span><span class="tag">LaTorre</span><span class="tag">Papaya Dada</span><span class="tag">Javier Neira</span></div>
+      </div>
+      <div>
+        <div class="media-lbl" data-es>Playlist de mezclas</div>
+        <div class="media-lbl" data-en>Mix playlist</div>
+        <div class="sp" data-iframe><iframe src="https://open.spotify.com/embed/playlist/4bKUu2MVE0Kex08pyKtQ40?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>
+        <div style="margin-top:20px">
+          <div class="lbl" data-es>Reconocimiento</div><div class="lbl" data-en>Recognition</div>
+          <div style="font-size:11px;color:#7A7585" data-es>2º Lugar — Concurso de Mezcla Neumann Berlin (2020)</div>
+          <div style="font-size:11px;color:#7A7585" data-en>2nd Place — Neumann Berlin Mixing Contest (2020)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6 DISEÑO DE SECUENCIAS -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="#8B7ABE" opacity=".06"/>
+  </svg>
+  <div class="inner">
+    <div class="lbl" data-es>Diseño de Secuencias</div><div class="lbl" data-en>Show Sequencing</div>
+    <div class="sh" data-es>Sincronía total.</div><div class="sh" data-en>Total sync.</div>
+    <div class="g2">
+      <div>
+        <div class="sub" data-es>Diseño de secuencias para shows que se adaptan a las necesidades de cada artista, involucrando procesamientos avanzados de audio, programación MIDI, automatización y sincronización con otros elementos escénicos.</div>
+        <div class="sub" data-en>Custom show sequencing adapted to each artist — advanced audio processing, MIDI programming, automation, and sync with every stage element.</div>
+        <div class="bl">
+          <div class="bi" data-es><span>Sincronía con iluminación, visuales y pyro</span></div>
+          <div class="bi" data-en><span>Sync with lighting, visuals and pyro</span></div>
+          <div class="bi" data-es><span>Instrumentos virtuales</span></div>
+          <div class="bi" data-en><span>Virtual instruments</span></div>
+          <div class="bi" data-es><span>Procesamiento automatizado de instrumentos y voces en vivo</span></div>
+          <div class="bi" data-en><span>Automated processing of instruments and voices live</span></div>
+          <div class="bi" data-es><span>Programación de luces con sincronía musical</span></div>
+          <div class="bi" data-en><span>Lighting programming with musical sync</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="lbl" data-es>Entorno técnico</div><div class="lbl" data-en>Technical environment</div>
+        <div class="bl">
+          <div class="bi"><span>Ableton Live — show rack</span></div>
+          <div class="bi" data-es><span>Diseño de rack de playback</span></div>
+          <div class="bi" data-en><span>Playback rack design</span></div>
+          <div class="bi" data-es><span>Diseño de instrumentos (Reaktor · M4L)</span></div>
+          <div class="bi" data-en><span>Instrument design (Reaktor · M4L)</span></div>
+          <div class="bi" data-es><span>Integración MIDI/OSC con iluminación</span></div>
+          <div class="bi" data-en><span>MIDI/OSC integration with lighting</span></div>
+        </div>
+        <div class="media-lbl" data-es>Sistema en vivo — EVHA × Native Instruments</div>
+        <div class="media-lbl" data-en>Live system — EVHA × Native Instruments</div>
+        <div class="yt" data-iframe><iframe src="https://www.youtube.com/embed/5ol2pluhnnU?start=194" allowfullscreen loading="lazy"></iframe></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 7 COMPOSICIÓN & ARREGLOS -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="#8B7ABE" opacity=".06"/>
+  </svg>
+  <div class="inner">
+    <div class="lbl" data-es>Composición &amp; Arreglos</div><div class="lbl" data-en>Composition &amp; Arrangements</div>
+    <div class="sh" data-es>Tradición y modernidad.</div><div class="sh" data-en>Tradition &amp; modernity.</div>
+    <div class="g2">
+      <div>
+        <div class="sub" data-es>El trabajo en composición y arreglos abarca proyectos personales y colaboraciones, explorando la fusión entre tradición y modernidad. Incluye música para cine, instalaciones artísticas y proyectos audiovisuales.</div>
+        <div class="sub" data-en>Composition and arrangement work spans personal projects and collaborations — the fusion of tradition and modernity, including music for film, art installations, and audiovisual projects.</div>
+        <div class="media-lbl" data-es>EVHA — Caminar a Donde Sea</div>
+        <div class="media-lbl" data-en>EVHA — Caminar a Donde Sea</div>
+        <div class="yt" data-iframe><iframe src="https://www.youtube.com/embed/GBgADTCc4G0" allowfullscreen loading="lazy"></iframe></div>
+      </div>
+      <div>
+        <div class="lbl" data-es>Trabajos destacados</div><div class="lbl" data-en>Featured works</div>
+        <div class="bl">
+          <div class="bi" data-es><span>Premio <strong>Ibermúsicas "Canción Popular"</strong> (2021)</span></div>
+          <div class="bi" data-en><span><strong>Ibermúsicas "Popular Song" Award</strong> (2021)</span></div>
+          <div class="bi" data-es><span>'Memoria' usada en una escena de <strong>Parthenope</strong> — Paolo Sorrentino (2024)</span></div>
+          <div class="bi" data-en><span>'Memoria' featured in a scene of <strong>Parthenope</strong> — Paolo Sorrentino (2024)</span></div>
+          <div class="bi" data-es><span>Documental <strong>SIONA</strong> — apoyado por Pulitzer Center</span></div>
+          <div class="bi" data-en><span>Documentary <strong>SIONA</strong> — supported by Pulitzer Center</span></div>
+          <div class="bi" data-es><span><strong>EVHA</strong> — electrónica experimental desde la identidad andina y amazónica ecuatoriana</span></div>
+          <div class="bi" data-en><span><strong>EVHA</strong> — experimental electronics from Ecuadorian Andean and Amazonian identity</span></div>
+          <div class="bi" data-es><span><strong>LaTorre</strong> — producción contemporánea desde la música tradicional ecuatoriana</span></div>
+          <div class="bi" data-en><span><strong>LaTorre</strong> — contemporary production rooted in traditional Ecuadorian music</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 8 EN ESCENA & PREMIOS -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="#8B7ABE" opacity=".06"/>
+  </svg>
+  <div class="inner">
+    <div class="g2">
+      <div>
+        <div class="lbl" data-es>Músico Intérprete — Festivales</div><div class="lbl" data-en>Live Performer — Festivals</div>
+        <div class="sh" data-es>En escena.</div><div class="sh" data-en>On stage.</div>
+        <div class="fw">
+          <div>
+            <div class="fl">LaTorre</div>
+            <div class="fr"><span>Festival Capitol Land</span><span>2024</span></div>
+            <div class="fr"><span>BIME, Bilbao</span><span>2023</span></div>
+            <div class="fr"><span>Underfest, Vigo</span><span>2023</span></div>
+            <div class="fr"><span>Fiesta de la Hispanidad, Madrid</span><span>2022</span></div>
+            <div class="fr"><span>Festival Contracorriente, Quito</span><span>2022</span></div>
+            <div class="fr"><span>TEDx, Quito</span><span>2021</span></div>
+            <div class="fr"><span>Festival Isla Viva, Quito</span><span>2020</span></div>
+            <div class="fr"><span>Festival Marvin, CDMX</span><span>2019</span></div>
+          </div>
+          <div>
+            <div class="fl">EVHA</div>
+            <div class="fr"><span>Fusion Festival, Lärz (DE)</span><span>2019</span></div>
+            <div class="fr"><span>C.C. Teopanzolco, Cuernavaca</span><span>2019</span></div>
+            <div class="fr"><span>Festival Marvin, CDMX</span><span>2019</span></div>
+            <div class="fr"><span>Festival Contrapedal, Montevideo</span><span>2018</span></div>
+            <div class="fr"><span>Verano de las Artes, Quito</span><span>2016 · 2018</span></div>
+            <div class="fr"><span>Festival Tercera Llamada, Quito</span><span>2017</span></div>
+            <div class="fr"><span>Marsatac, Quito</span><span>2014</span></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="lbl" data-es>Trayectoria &amp; Premios</div><div class="lbl" data-en>Career &amp; Awards</div>
+        <div class="sh" data-es>Reconocimientos.</div><div class="sh" data-en>Recognition.</div>
+        <div class="awl">
+          <div class="awi feat"><div class="awy">2024</div><div><div class="awt" data-es>Parthenope — Paolo Sorrentino</div><div class="awt" data-en>Parthenope — Paolo Sorrentino</div><div class="awd" data-es>'Memoria' usada en una escena de la película</div><div class="awd" data-en>'Memoria' featured in a scene of the film</div></div></div>
+          <div class="awi feat"><div class="awy">2024</div><div><div class="awt">MICSUR</div><div class="awd" data-es>Delegación ecuatoriana, mercado cultural del sur</div><div class="awd" data-en>Ecuador's delegation, southern cultural market</div></div></div>
+          <div class="awi"><div class="awy">2021</div><div><div class="awt" data-es>Premio Ibermúsicas — Canción Popular</div><div class="awt" data-en>Ibermúsicas Award — Popular Song</div></div></div>
+          <div class="awi"><div class="awy">2021</div><div><div class="awt">SIMA Social Media Impact Awards</div><div class="awd" data-es>Documental SIONA — Pulitzer Center</div><div class="awd" data-en>SIONA documentary — Pulitzer Center</div></div></div>
+          <div class="awi"><div class="awy">2020</div><div><div class="awt" data-es>2º Lugar — Concurso de Mezcla Neumann Berlin</div><div class="awt" data-en>2nd Place — Neumann Berlin Mixing Contest</div></div></div>
+          <div class="awi"><div class="awy">2019·21</div><div><div class="awt" data-es>Programa de Incentivos — SAYCE</div><div class="awt" data-en>Incentives Program — SAYCE</div></div></div>
+          <div class="awi"><div class="awy">2017</div><div><div class="awt">"50 Best Songs from Latin America" — NOISY USA</div><div class="awd" data-es>Por "Culebra del Monte" con EVHA</div><div class="awd" data-en>For "Culebra del Monte" with EVHA</div></div></div>
+          <div class="awi"><div class="awy">2016</div><div><div class="awt" data-es>2º Lugar — "Música de mi Tierra" SAYCE</div><div class="awt" data-en>2nd Place — "Música de mi Tierra" SAYCE</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 9 PRENSA & OTROS -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="#8B7ABE" opacity=".06"/>
+  </svg>
+  <div class="inner">
+    <div class="g2">
+      <div>
+        <div class="lbl" data-es>Prensa</div><div class="lbl" data-en>Press</div>
+        <div class="sh" data-es>Cobertura.</div><div class="sh" data-en>Coverage.</div>
+        <div class="press-grid">
+          <a class="press-card" href="https://www.thefader.com/2016/12/16/evha-ecuador-musical-heritage-interview" target="_blank" rel="noopener"><div class="press-src">The FADER</div><div class="press-ttl">Why Ecuador's Young Musicians Are Embracing Their Country's Cultural History</div></a>
+          <a class="press-card" href="https://daily.bandcamp.com/features/evha-electronic-feature" target="_blank" rel="noopener"><div class="press-src">Bandcamp Daily</div><div class="press-ttl">EVHA's Synthesized Beat is Pumping Ecuador's Electronic Heart</div></a>
+          <a class="press-card" href="https://blog.native-instruments.com/watch-dive-deeper-into-ecuadors-exploding-music-scene/" target="_blank" rel="noopener"><div class="press-src">Native Instruments</div><div class="press-ttl">Dive Deeper Into Ecuador's Exploding Music Scene</div></a>
+          <a class="press-card" href="https://soundsandcolours.com/articles/ecuador/soaking-musical-knowledge-roots-interview-el-viejo-hombre-de-los-andes-exclusive-new-video-40123/" target="_blank" rel="noopener"><div class="press-src">Sounds and Colours</div><div class="press-ttl">Soaking Up Musical Knowledge at the Roots</div></a>
+        </div>
+      </div>
+      <div>
+        <div class="lbl" data-es>Otros</div><div class="lbl" data-en>Other work</div>
+        <div class="sh" data-es>Más allá del sonido.</div><div class="sh" data-en>Beyond sound.</div>
+        <div class="bl">
+          <div class="bi" data-es><span><strong>Editor audiovisual</strong> — "Caminar a Donde Sea" (EVHA) y "Temporal" (LaTorre)</span></div>
+          <div class="bi" data-en><span><strong>Audiovisual editor</strong> — "Caminar a Donde Sea" (EVHA) and "Temporal" (LaTorre)</span></div>
+          <div class="bi" data-es><span><strong>Visuales &amp; Mapping</strong> — FUZE TEA, CONQUITO, Municipio de Cuenca, Presidencia de Ecuador, Juan Fernando Velasco, Daniel Betancourt</span></div>
+          <div class="bi" data-en><span><strong>Visuals &amp; Mapping</strong> — FUZE TEA, CONQUITO, Cuenca City Hall, Presidency of Ecuador, Juan Fernando Velasco, Daniel Betancourt</span></div>
+          <div class="bi" data-es><span><strong>Diseño de iluminación</strong> para shows de LaTorre</span></div>
+          <div class="bi" data-en><span><strong>Lighting design</strong> for LaTorre shows</span></div>
+          <div class="bi" data-es><span>Diseño de instrumentos en <strong>Reaktor</strong> para el sistema en vivo de EVHA — auspiciado y publicado por <strong>Native Instruments</strong></span></div>
+          <div class="bi" data-en><span><strong>Reaktor</strong> instrument design for the EVHA live system — sponsored and published by <strong>Native Instruments</strong></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 10 CONTACTO -->
+<div class="slide">
+  <svg class="wave" viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs><linearGradient id="wg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8B7ABE"/><stop offset="100%" stop-color="#2A1F5C"/></linearGradient></defs>
+    <path d="M300,0 Q450,175 350,350 Q250,525 400,700 L500,700 L500,0 Z" fill="url(#wg2)" opacity=".45"/>
+    <path d="M360,0 Q490,210 370,390 Q255,560 440,700 L500,700 L500,0 Z" stroke="#8B7ABE" stroke-width=".4" fill="none" opacity=".28"/>
+  </svg>
+  <div class="inner">
+    <div class="lbl" data-es>Contacto</div><div class="lbl" data-en>Contact</div>
+    <div class="sh" data-es>Hablemos.</div><div class="sh" data-en>Let's talk.</div>
+    <div class="g2" style="margin-top:12px">
+      <div class="clinks">
+        <a class="clink" href="/cdn-cgi/l/email-protection#30515c555a515e54425f1e5d555e545f4a511e435470575d51595c1e535f5d"><span><span class="__cf_email__" data-cfemail="85e4e9e0efe4ebe1f7eaabe8e0ebe1eaffe4abf6e1c5e2e8e4ece9abe6eae8">[email&#160;protected]</span></span><span class="clbl">Email</span></a>
+        <a class="clink" href="https://www.instagram.com/xuzu593/" target="_blank" rel="noopener"><span>@xuzu593</span><span class="clbl">Instagram</span></a>
+        <a class="clink" href="https://www.linkedin.com/in/alejandro-mendozac/" target="_blank" rel="noopener"><span>alejandro-mendozac</span><span class="clbl">LinkedIn</span></a>
+        <a class="clink" href="https://credits.muso.ai/profile/ef3a53d1-918f-4f57-a1a6-11acfc75f50c/credits" target="_blank" rel="noopener"><span data-es>Ver créditos completos</span><span data-en>Full credits</span><span class="clbl">Muso.ai</span></a>
+      </div>
+      <div class="cbox">
+        <div class="lbl" data-es>Ubicación</div><div class="lbl" data-en>Location</div>
+        <div class="city">Madrid</div>
+        <div class="ctry">España</div>
+        <div class="lbl" data-es>Disponibilidad</div><div class="lbl" data-en>Availability</div>
+        <div style="font-size:12px;color:#C0BBCC;margin-bottom:14px"><span class="adot"></span><span data-es>Abierto a proyectos</span><span data-en>Open to projects</span></div>
+        <div style="border-top:.5px solid rgba(139,122,190,.1);padding-top:12px">
+          <div class="sp-lbl" style="margin-bottom:6px">Sponsor</div>
+          <div class="sp-badge">Universal Audio · UADx</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+var N=10, cur=0;
+var slider, uctr, udots;
+
+function goTo(n){
+  cur=Math.max(0,Math.min(N-1,n));
+  slider.style.transform='translateX(-'+(cur*100)+'%)';
+  uctr.textContent=(cur+1)+' / '+N;
+  document.querySelectorAll('.dot').forEach(function(d,i){d.classList.toggle('on',i===cur)});
+}
+
+function setLang(l){
+  document.body.classList.toggle('en',l==='en');
+  document.getElementById('bes').classList.toggle('on',l==='es');
+  document.getElementById('ben').classList.toggle('on',l==='en');
+}
+
+window.addEventListener('DOMContentLoaded',function(){
+  slider=document.getElementById('slider');
+  uctr=document.getElementById('uctr');
+  udots=document.getElementById('udots');
+
+  for(var i=0;i<N;i++){
+    (function(idx){
+      var d=document.createElement('button');
+      d.className='dot'+(idx===0?' on':'');
+      d.onclick=function(){goTo(idx)};
+      udots.appendChild(d);
+    })(i);
+  }
+
+  var el=document.getElementById('email-link');
+  if(el){el.href='mailto:alejandro.mendoza.sd@gmail.com';}
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='ArrowDown') goTo(cur+1);
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp') goTo(cur-1);
+  });
+
+  var locked=false;
+  window.addEventListener('wheel',function(e){
+    e.preventDefault();
+    if(locked)return;
+    if(e.deltaY>30){locked=true;goTo(cur+1);setTimeout(function(){locked=false},900)}
+    else if(e.deltaY<-30){locked=true;goTo(cur-1);setTimeout(function(){locked=false},900)}
+  },{passive:false});
+
+  var tx=0,ty=0;
+  window.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+  window.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-tx;
+    var dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy)) goTo(cur+(dx<0?1:-1));
+    else if(Math.abs(dy)>40&&Math.abs(dy)>Math.abs(dx)) goTo(cur+(dy<0?1:-1));
+  },{passive:true});
+});
+</script>
+</body>
+</html>
